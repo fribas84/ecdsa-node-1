@@ -18,6 +18,11 @@ app.get("/balance/:address", (req, res) => {
   res.send({ balance });
 });
 
+app.get("/balances", (req,res)=>{
+  res.send({balances});
+
+})
+
 app.post("/send", (req, res) => {
   const { sender, recipient, amount } = req.body;
 
