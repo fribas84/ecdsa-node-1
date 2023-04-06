@@ -8,7 +8,9 @@ import Balances from "./components/Balances";
 function App() {
   const [balance, setBalance] = useState(0);
   const [address, setAddress] = useState("");
+  const [addresses, setAddresses] = useState([]);
   const [balances, setBalances] = useState({});
+  const [wallet,setWallet] = useState("");
 
   useEffect( () => {
     const getData = async ()=>{
@@ -18,18 +20,33 @@ function App() {
       setBalances(balances);
     }
     getData();  
-  }, [])
+
+  },[])
   
+  useEffect(()=>{
+    const fillAddresses = () =>{
+      const addss=[];
+      Object.entries(balances).map(([address, balance]) => {
+        addss.push(address);
+      })
+      setAddresses(addss);
+    }
+    fillAddresses();
+    }
+        ,[balances])
 
   return (
     <div className="app">
       <Wallet
-        balance={balance}
-        setBalance={setBalance}
         address={address}
         setAddress={setAddress}
+        balances={balances}
       />
-      <Transfer setBalance={setBalance} address={address} />
+      <Transfer
+        setBalance={setBalance}
+        address={address}
+        addresses={addresses}
+      />
       <Balances balances={balances} />
 
     </div>
