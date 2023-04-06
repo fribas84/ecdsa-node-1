@@ -10,9 +10,8 @@ function Transfer({ address, setBalance, addresses }) {
     const removeOrigin = () => {
       return addresses.filter(add => add !== address);
     }
-    
-    const createOptions = () =>{}
     setDestOptions(removeOrigin());
+    setRecipient("");
   },
     [address]);
   const setValue = (setter) => (evt) => setter(evt.target.value);
@@ -50,9 +49,9 @@ return (
       Recipient
       <div className="select-dropdown">
         <select id="" onChange={e => setRecipient(e.target.value)} value={recipient}>
-          <option value=""> -- Select a destination address address -- </option>
+          <option key="0" value=""> -- Select a destination address address -- </option>
             {
-              destOptions.map((val)=> <option value={val}>{val}</option>
+              destOptions.map((val)=> <option key={val} value={val}>{val}</option>
 
               )
             }
