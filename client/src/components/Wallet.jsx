@@ -12,12 +12,13 @@ function Wallet({ address, setAddress, balances }) {
   return (
     <div className="container">
       <h1>Select Wallet</h1>
-      <div className="select-dropdown">
-        <select id="" onChange={e=>setAddress(e.target.value)} value={address}>
+      <label>
+        Select Origin Wallet - Private Key will be need to sing the message
+        <select id="" onChange={e=>setAddress(e.target.value)} value={address} className="select-dropdown">
           <option value=""> -- Select an address -- </option>
           {options}
         </select>
-      </div>
+      </label>
     </div>
   );
 }

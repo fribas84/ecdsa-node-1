@@ -45,10 +45,10 @@ return (
       ></input>
     </label>
 
-    <div>
+    <label>
       Recipient
-      <div className="select-dropdown">
-        <select id="" onChange={e => setRecipient(e.target.value)} value={recipient}>
+   
+      <select id="" onChange={e => setRecipient(e.target.value)} value={recipient} className="select-dropdown">
           <option key="0" value=""> -- Select a destination address address -- </option>
             {
               destOptions.map((val)=> <option key={val} value={val}>{val}</option>
@@ -56,8 +56,10 @@ return (
               )
             }
         </select>
-      </div>
-    </div>
+      
+        
+     
+    </label>
 
     <input type="submit" className="button" value="Transfer" />
   </form>
