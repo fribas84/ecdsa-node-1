@@ -33,7 +33,7 @@ function App() {
     }
     fillAddresses();
     }
-        ,[balances])
+    ,[balances])
 
   return (
     <div className="app">
