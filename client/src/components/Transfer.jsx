@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import server from "../server";
 import ModalSign from "./ModalSign";
+import ErrorHandler from "./ErrorHandler";
 
-function Transfer({ address, setBalance, addresses }) {
+function Transfer({ address, setBalance, addresses, setWalletError,recipientError, setRecipientError, amountError, setAmountError }) {
   const [sendAmount, setSendAmount] = useState("");
   const [recipient, setRecipient] = useState("");
   const [destOptions, setDestOptions] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [signature, setSignature] = useState("");
 
-  console.log("address: " ,address);
   useEffect(() => {
     const removeOrigin = () => {
       return addresses.filter(add => add !== address);
@@ -18,11 +18,45 @@ function Transfer({ address, setBalance, addresses }) {
     setRecipient("");
   },
     [address]);
+
+  useEffect(()=>{
+    if(sendAmount>0){
+      setAmountError(false);
+    }
+    if(!isNaN(sendAmount)){
+      setAmountError(false);
+    }
+  }
+    ,[sendAmount]);
+
+  useEffect(()=>{
+    if(recipient){
+      setRecipientError(false);
+    }
+  },[recipient])
   const setValue = (setter) => (evt) => setter(evt.target.value);
 
   async function transfer(evt) {
     evt.preventDefault();
-    setShowModal(true);
+    if(address===''){
+      setWalletError(true);
+    }
+    else if(recipient===''){
+      setRecipientError(true);
+    }
+    else if(sendAmount<= 0){
+      setAmountError(true);
+    }
+    else if(isNaN(sendAmount  )){
+      setAmountError(true);
+    }
+    else{
+      setWalletError(false);
+      setRecipientError(false);
+      setAmountError(false);
+      setShowModal(true);
+    }
+    
     // try {
     //   const {
     //     data: { balance },
@@ -40,6 +74,12 @@ function Transfer({ address, setBalance, addresses }) {
   return (
     <>
       <form className="container transfer" onSubmit={transfer}>
+      {amountError && (
+        <ErrorHandler errorText = "Invalid amount to transfer"/>
+    )}
+      {recipientError && (
+        <ErrorHandler errorText = "A valid recipient is requiered"/>
+    )}
         <h1>Send Transaction</h1>
 
         <label>

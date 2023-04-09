@@ -1,6 +1,6 @@
+import ErrorHandler from "./ErrorHandler";
 
-
-function Wallet({ address, setAddress, balances }) {
+function Wallet({ address, setAddress, balances, walletError,setWalletError }) {
 
 
   const options = Object.entries(balances).map(([address, balance]) => (
@@ -8,9 +8,13 @@ function Wallet({ address, setAddress, balances }) {
       {address}
     </option>
   ));
-
+  if(address!==''){
+    setWalletError(false)}
   return (
     <div className="container">
+          {walletError && (
+        <ErrorHandler errorText = "A origin wallet is required"/>
+    )}
       <h1>Select Wallet</h1>
       <label>
         Select Origin Wallet - Private Key will be need to sing the message
@@ -19,6 +23,7 @@ function Wallet({ address, setAddress, balances }) {
           {options}
         </select>
       </label>
+
     </div>
   );
 }

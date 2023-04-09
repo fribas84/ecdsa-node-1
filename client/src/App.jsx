@@ -11,6 +11,9 @@ function App() {
   const [addresses, setAddresses] = useState([]);
   const [balances, setBalances] = useState({});
   const [wallet,setWallet] = useState("");
+  const [walletError,setWalletError]=useState(false);
+  const [recipientError,setRecipientError]=useState(false);
+  const [amountError,setAmountError] = useState(false);
 
   useEffect( () => {
     const getData = async ()=>{
@@ -41,11 +44,19 @@ function App() {
         address={address}
         setAddress={setAddress}
         balances={balances}
+        walletError = {walletError}
+        setWalletError = {setWalletError}
+
       />
       <Transfer
         setBalance={setBalance}
         address={address}
         addresses={addresses}
+        setWalletError={setWalletError}
+        recipientError={recipientError}
+        setRecipientError={setRecipientError}
+        amountError={amountError}
+        setAmountError={setAmountError}
       />
       <Balances balances={balances} />
 

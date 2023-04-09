@@ -1,5 +1,7 @@
 import { useState } from "react";
 import ReactModal from "react-modal";
+import {toHex, utf8ToBytes} from "ethereum-cryptography/utils";
+import secp from "ethereum-cryptography/secp256k1";
 
 // SetShowModal={SetShowModal}
 // address={address}
@@ -20,15 +22,19 @@ const ModalSign = ({
   const [privateKey, setPrivateKey] = useState("");
   console.log(privateKey);
 
-  const sing = () =>{
-
+  const sing = (evt) =>{
+    evt.preventDefault();
     const txtData = {
         sender: address,
         amount: parseInt(sendAmount),
         recipient: recipient
     }
-
+    console.log(txtData);
+    const txtDataHex = toHex(utf8ToBytes(JSON.stringify(txtData)));
     
+    console.log(txtDataHex);
+    const signedMsg = secp.sign(txtDataHex,privateKey);
+    console.log(signedMsg);
       // try {
       //   const {
       //     data: { balance },
@@ -41,8 +47,6 @@ const ModalSign = ({
       // } catch (ex) {
       //   alert(ex.response.data.message);
       // }
-
-
   }
   const setValue = (setter) => (evt) => setter(evt.target.value);
   return (
