@@ -28,12 +28,12 @@ const sign = async () =>{
     
     const hashedMSG = keccak256(utf8ToBytes(message));
     
-    const [singedMessage,recoverBit] = await secp.sign(hashedMSG,keys[0].privateKey, {recovered: true})
-    console.log("signed " + singedMessage);
+    const [signedMessage,recoverBit] = await secp.sign(hashedMSG,keys[0].privateKey, {recovered: true})
+    console.log("signed " + signedMessage);
     console.log("recoverBit "+ recoverBit);
-    const fullSig = new Uint8Array([recoverBit, ...singedMessage]);
+    const fullSig = new Uint8Array([recoverBit, ...signedMessage]);
     console.log("FullSig " + fullSig);
-    const hexSigned = toHex(singedMessage);
+    const hexSigned = toHex(signedMessage);
     console.log("signed to hex: " + hexSigned );
     const fullSignatureBytes = hexToBytes(hexSigned);
     const recoverBit2 = fullSignatureBytes[0]
@@ -42,7 +42,7 @@ const sign = async () =>{
 
     const signatureBytes2 = fullSignatureBytes.slice(1);
 
-    const publicKey2 = secp.recoverPublicKey(hashedMSG, singedMessage,recoverBit);
+    const publicKey2 = secp.recoverPublicKey(hashedMSG, signedMessage,recoverBit);
     console.log("public recovered " + toHex(publicKey2)); 
     console.log("public Original " +  keys[0].publicKey);
 

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import ReactModal from "react-modal";
 import {toHex, utf8ToBytes} from "ethereum-cryptography/utils";
-import secp from "ethereum-cryptography/secp256k1";
+import * as secp from "ethereum-cryptography/secp256k1";
+import {keccak256} from "ethereum-cryptography/keccak";
 
 // SetShowModal={SetShowModal}
 // address={address}
@@ -22,40 +23,36 @@ const ModalSign = ({
   const [privateKey, setPrivateKey] = useState("");
   console.log(privateKey);
 
-  const sing = (evt) =>{
+  const sign = async (evt) =>{
     evt.preventDefault();
     const txtData = {
         sender: address,
         amount: parseInt(sendAmount),
         recipient: recipient
     }
-    console.log(txtData);
-    const txtDataHex = toHex(utf8ToBytes(JSON.stringify(txtData)));
-    
-    console.log(txtDataHex);
-    const signedMsg = secp.sign(txtDataHex,privateKey);
-    console.log(signedMsg);
-      // try {
-      //   const {
-      //     data: { balance },
-      //   } = await server.post(`send`, {
-      //     sender: address,
-      //     amount: parseInt(sendAmount),
-      //     recipient,
-      //   });
-      //   setBalance(balance);
-      // } catch (ex) {
-      //   alert(ex.response.data.message);
-      // }
+    const txtDataHex = toHex(keccak256(utf8ToBytes(JSON.stringify(txtData))));
+    const [signedMessage,recoverBit] = await secp.sign(txtDataHex,privateKey,{recovered: true});
+
+    const transaction= {
+      address: address,
+      txtData: txtData,
+      signature: toHex(signedMessage),
+      recoverBit: recoverBit
+    }
+    console.log("Tx: ",transaction);
+
+
   }
+
+
   const setValue = (setter) => (evt) => setter(evt.target.value);
   return (
     <ReactModal
         className ="modal"
         isOpen={showModal}
-        contentLabel="Sing Transfer"
+        contentLabel="Sign Transfer"
         appElement={document.getElementById('root')}>
-      <form className="transfer" onSubmit={sing}>
+      <form className="transfer" onSubmit={sign}>
         <h1>Sign Transaction</h1>
 
         <label>
