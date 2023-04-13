@@ -1,6 +1,6 @@
 import ErrorHandler from "./ErrorHandler";
 
-function Wallet({ address, setAddress, balances, walletError,setWalletError }) {
+function Wallet({ address, setAddress, balances, walletError}) {
 
 
   const options = Object.entries(balances).map(([address, balance]) => (
@@ -8,8 +8,7 @@ function Wallet({ address, setAddress, balances, walletError,setWalletError }) {
       {address}
     </option>
   ));
-  if(address!==''){
-    setWalletError(false)}
+  
   return (
     <div className="container">
           {walletError && (

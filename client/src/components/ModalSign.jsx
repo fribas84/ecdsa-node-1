@@ -73,7 +73,7 @@ const ModalSign = ({
         <label>
           Enter Private key
           <input
-            placeholder="0x12345678...."
+            placeholder="0123456789ABCDEF...."
             value={privateKey}
             onChange={setValue(setPrivateKey)}
           ></input>
