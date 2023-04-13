@@ -45,20 +45,11 @@ app.post("/send", (req, res) => {
 
 app.post("/transfer", (req, res) => {
   const { address, txData,txDataHashed, signature, recoverBit } = req.body;
-  console.log("Address: ",address);
-  console.log("TxData: ", txData);
-  console.log("Signature: ", signature);
-  console.log("RecoverBit: ",recoverBit);
-  console.log("amount" , txData.amount);
   const amount = txData.amount;
   const pubKey = secp.recoverPublicKey(txDataHashed,signature,recoverBit);
-  console.log("Signer Public Addres: ", pubKey);
-
-  
   const hashKey = keccak256(pubKey);
   const hexAddr = toHex(hashKey.slice(-20));
-  console.log("signer address: ", hexAddr);
-  if(hexAddr===address){
+ if(hexAddr===address){
     if(balances[address]>=amount){
       balances[address] = balances[address]- amount;
       balances[txData.recipient] += amount;

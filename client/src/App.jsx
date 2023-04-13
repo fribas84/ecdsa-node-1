@@ -14,17 +14,27 @@ function App() {
   const [walletError,setWalletError]=useState(false);
   const [recipientError,setRecipientError]=useState(false);
   const [amountError,setAmountError] = useState(false);
+  const [txCounter,setTxCounter]=useState(0);
 
-  useEffect( () => {
+
+  
+  useEffect( () => { 
     const getData = async ()=>{
       const {
         data: {balances},
       } = await server.get(`balances`);
       setBalances(balances);
     }
-    getData();  
-
+    getData()
   },[])
+  useEffect(() => {
+    const getData = async ()=>{
+    const {
+      data: {balances},
+    } = await server.get(`balances`);
+    setBalances(balances);
+  }
+ getData()},[txCounter])
   
   useEffect(()=>{
     const fillAddresses = () =>{
@@ -57,6 +67,8 @@ function App() {
         setRecipientError={setRecipientError}
         amountError={amountError}
         setAmountError={setAmountError}
+        txCounter={txCounter}
+        setTxCounter={setTxCounter}
       />
       <Balances balances={balances} />
 
