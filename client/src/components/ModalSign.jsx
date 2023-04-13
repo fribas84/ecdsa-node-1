@@ -3,6 +3,7 @@ import ReactModal from "react-modal";
 import {toHex, utf8ToBytes} from "ethereum-cryptography/utils";
 import * as secp from "ethereum-cryptography/secp256k1";
 import {keccak256} from "ethereum-cryptography/keccak";
+import server from "../server";
 
 // SetShowModal={SetShowModal}
 // address={address}
@@ -21,25 +22,36 @@ const ModalSign = ({
   sendAmount,
 }) => {
   const [privateKey, setPrivateKey] = useState("");
-  console.log(privateKey);
 
   const sign = async (evt) =>{
     evt.preventDefault();
-    const txtData = {
+    const txData = {
         sender: address,
         amount: parseInt(sendAmount),
         recipient: recipient
     }
-    const txtDataHex = toHex(keccak256(utf8ToBytes(JSON.stringify(txtData))));
-    const [signedMessage,recoverBit] = await secp.sign(txtDataHex,privateKey,{recovered: true});
+  
+    const txDataHashed = toHex(keccak256(utf8ToBytes(JSON.stringify(txData))));
+    const [signedMessage,recoverBit] = await secp.sign(txDataHashed,privateKey,{recovered: true});
 
     const transaction= {
       address: address,
-      txtData: txtData,
+      txData: txData,
+      txDataHashed: txDataHashed,
       signature: toHex(signedMessage),
       recoverBit: recoverBit
     }
     console.log("Tx: ",transaction);
+
+        
+    try {
+      const {
+        data: { balance },
+      } = await server.post(`transfer`,transaction);
+      setBalance(balance);
+    } catch (ex) {
+      alert(ex.response.data.message);
+    }
 
 
   }

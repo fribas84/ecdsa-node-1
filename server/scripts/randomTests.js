@@ -45,10 +45,17 @@ const sign = async () =>{
     const publicKey2 = secp.recoverPublicKey(hashedMSG, signedMessage,recoverBit);
     console.log("public recovered " + toHex(publicKey2)); 
     console.log("public Original " +  keys[0].publicKey);
+    console.log("new test")
+    const newPrivate = "51fc4ac7904e7153bc60df72992f38c885a47e3a2380728993e98d4af800cb7e"
+const public = secp.getPublicKey(hexToBytes(newPrivate),false);
+console.log(toHex(keccak256(public).slice(-20)));
+const newAdd = toHex(keccak256(public));
+
+console.log(newAdd.substring(newAdd.length - 40,newAdd.length));
+
 
 }
 
 
 sign();
-
 
