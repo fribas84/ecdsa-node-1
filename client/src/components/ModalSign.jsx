@@ -20,6 +20,8 @@ const ModalSign = ({
   signature,
   setSignature,
   sendAmount,
+  txCounter,
+  setTxCounter
 }) => {
   const [privateKey, setPrivateKey] = useState("");
 
@@ -41,16 +43,17 @@ const ModalSign = ({
       signature: toHex(signedMessage),
       recoverBit: recoverBit
     }
-    console.log("Tx: ",transaction);
 
         
     try {
       const {
         data: { balance },
       } = await server.post(`transfer`,transaction);
-      setBalance(balance);
+      setTxCounter(txCounter+1);
+      setShowModal(false);
     } catch (ex) {
       alert(ex.response.data.message);
+      setShowModal(false);
     }
 
 
