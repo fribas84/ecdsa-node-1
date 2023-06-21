@@ -19,6 +19,8 @@ function Transfer({
   const [destOptions, setDestOptions] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [signature, setSignature] = useState("");
+  const [errorModal, setErrorModal] = useState(false);
+  const [errorText,setErrorText] = useState("");
 
   useEffect(() => {
     const removeOrigin = () => {
@@ -112,6 +114,10 @@ function Transfer({
         sendAmount={sendAmount}
         txCounter={txCounter}
         setTxCounter={setTxCounter}
+        errorModal = {errorModal}
+        setErrorModal = {setErrorModal}
+        errorText = {errorText}
+        setErrorText = {setErrorText}
       />
     </>
   );

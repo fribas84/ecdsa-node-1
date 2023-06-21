@@ -4,12 +4,7 @@ This project is an example of using a client and server to facilitate transfers 
 
 However, something that we would like to incoporate is Public Key Cryptography. By using Elliptic Curve Digital Signatures we can make it so the server only allows transfers that have been signed for by the person who owns the associated address.
 
-### Video instructions
-For an overview of this project as well as getting started instructions, check out the following video:
-
-https://www.loom.com/share/0d3c74890b8e44a5918c4cacb3f646c4
- 
-### Client
+#
 
 The client folder contains a [react app](https://reactjs.org/) using [vite](https://vitejs.dev/). To get started, follow these steps:
 
@@ -31,4 +26,11 @@ The application should connect to the default server port (3042) automatically!
 _Hint_ - Use [nodemon](https://www.npmjs.com/package/nodemon) instead of `node` to automatically restart the server on any changes.
 
 # Solution
-Using ethereum-cryptography library several pair of private and public keys where generate
+Using ethereum-cryptography library several pair of private and public keys where generated.
+
+# Stack used
+The stack used for this demo is:
+- Vite
+- React 
+- Node.js
+- ether.js

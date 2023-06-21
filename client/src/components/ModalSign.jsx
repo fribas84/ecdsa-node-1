@@ -1,9 +1,11 @@
 import { useState } from "react";
 import ReactModal from "react-modal";
-import {toHex, utf8ToBytes} from "ethereum-cryptography/utils";
+import { toHex, utf8ToBytes } from "ethereum-cryptography/utils";
 import * as secp from "ethereum-cryptography/secp256k1";
-import {keccak256} from "ethereum-cryptography/keccak";
+import { keccak256 } from "ethereum-cryptography/keccak";
 import server from "../server";
+import ErrorHandler from "./ErrorHandler";
+
 
 // SetShowModal={SetShowModal}
 // address={address}
@@ -21,22 +23,36 @@ const ModalSign = ({
   setSignature,
   sendAmount,
   txCounter,
-  setTxCounter
+  setTxCounter,
+  errorModal,
+  setErrorModal,
+  errorText,
+  setErrorText
 }) => {
   const [privateKey, setPrivateKey] = useState("");
-
-  const sign = async (evt) =>{
+ 
+  const sign = async (evt) => {
+    setErrorModal(false);
+    setErrorText("");
     evt.preventDefault();
     const txData = {
-        sender: address,
-        amount: parseInt(sendAmount),
-        recipient: recipient
+      sender: address,
+      amount: parseInt(sendAmount),
+      recipient: recipient
     }
-  
+    let signedMessage;
+    let recoverBit;
     const txDataHashed = toHex(keccak256(utf8ToBytes(JSON.stringify(txData))));
-    const [signedMessage,recoverBit] = await secp.sign(txDataHashed,privateKey,{recovered: true});
+    try {
+       [signedMessage, recoverBit] = await secp.sign(txDataHashed, privateKey, { recovered: true });
 
-    const transaction= {
+    } catch {
+      setErrorModal(true);
+      setErrorText("Error while signing message. Check Private Key.");
+    }
+
+
+    const transaction = {
       address: address,
       txData: txData,
       txDataHashed: txDataHashed,
@@ -44,29 +60,38 @@ const ModalSign = ({
       recoverBit: recoverBit
     }
 
-        
+
     try {
       const {
         data: { balance },
-      } = await server.post(`transfer`,transaction);
-      setTxCounter(txCounter+1);
+      } = await server.post(`transfer`, transaction);
+      setTxCounter(txCounter + 1);
       setShowModal(false);
     } catch (ex) {
-      alert(ex.response.data.message);
-      setShowModal(false);
+      setErrorModal(true);
+      setErrorText(ex.response.data.message);
     }
-
 
   }
 
+  const handleCancel = (evt)=>{
+    evt.preventDefault();
+    setErrorModal(false);
+    setErrorText("");
+    setShowModal(false);
+  }
 
   const setValue = (setter) => (evt) => setter(evt.target.value);
   return (
     <ReactModal
-        className ="modal"
-        isOpen={showModal}
-        contentLabel="Sign Transfer"
-        appElement={document.getElementById('root')}>
+      className="modal"
+      isOpen={showModal}
+      contentLabel="Sign Transfer"
+      appElement={document.getElementById('root')}>
+      {errorModal && (
+        <ErrorHandler errorText={errorText} />
+      )}
+
       <form className="transfer" onSubmit={sign}>
         <h1>Sign Transaction</h1>
 
@@ -105,10 +130,10 @@ const ModalSign = ({
 
 
         <input type="submit" className="button" value="Sign and Send" />
-        <button className="button cancel" onClick={() => setShowModal(false)}>Cancel</button>
+        <button className="button cancel" onClick={handleCancel}>Cancel</button>
       </form>
-      
-      
+
+
     </ReactModal>
   );
 };
