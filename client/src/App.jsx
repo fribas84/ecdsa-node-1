@@ -49,7 +49,12 @@ function App() {
     ,[balances])
 
   return (
+    <>
+    <h1 className="heading">Wallet - Sign transactions</h1>
     <div className="app">
+      
+      
+     
       <Wallet
         address={address}
         setAddress={setAddress}
@@ -73,6 +78,7 @@ function App() {
       <Balances balances={balances} />
 
     </div>
+    </>
   );
 }
 
